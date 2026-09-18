@@ -2,44 +2,32 @@
 
 session_start();
 
-$login = $_POST['login'];
+include "app/cons.php";
+require_once "app/DLL.php";
 
+$login = $_POST['login'];
 $senha = $_POST['senha'];
 
-$senhaCriptografada = password_hash($senha , PASSWORD_DEFAULT);
-
-$nome = $_SESSION['nome'];
+$senhaCriptografada = password_hash($senha, PASSWORD_DEFAULT);
 
 $cpf = $_SESSION['cpf'];
 
-if(!is_dir("login")){
+$consulta = "INSERT INTO logins
+(cpf, login, senha)
+VALUES
+('$cpf', '$login', '$senhaCriptografada')";
 
-    mkdir("login");
-
-}
-
-$arquivo = "login/".$login.".dat";
-
-$dados = $nome."\n";
-$dados .= $cpf."\n";
-$dados .= $login."\n";
-$dados .= $senhaCriptografada."\n";
-
-$abrir = fopen($arquivo , "w");
-
-fwrite($abrir , $dados);
-
-fclose($abrir);
+banco($server, $user, $password, $db, $consulta);
 
 echo "
 
-    <script>
+<script>
 
-        alert('Cadastro realizado com sucesso!');
+    alert('Cadastro realizado com sucesso!');
 
-        window.location='login.php';
+    window.location='login.php';
 
-    </script>
+</script>
 
 ";
 

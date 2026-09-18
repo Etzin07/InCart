@@ -2,6 +2,9 @@
 
 session_start();
 
+include "app/cons.php";
+require_once "app/DLL.php";
+
 $nome = $_POST['nome'];
 $cpf = $_POST['cpf'];
 $endereco = $_POST['endereco'];
@@ -13,28 +16,14 @@ $cep = $_POST['cep'];
 $_SESSION['nome'] = $nome;
 $_SESSION['cpf'] = $cpf;
 
-if(!is_dir("usuarios")){
+$consulta = "INSERT INTO usuarios
+(nome, cpf, endereco, bairro, cidade, estado, cep)
+VALUES
+('$nome', '$cpf', '$endereco', '$bairro', '$cidade', '$estado', '$cep')";
 
-    mkdir("usuarios");
-
-}
-
-$arquivo = "usuarios/".$cpf.".dat";
-
-$dados = $nome."\n";
-$dados .= $cpf."\n";
-$dados .= $endereco."\n";
-$dados .= $bairro."\n";
-$dados .= $cidade."\n";
-$dados .= $estado."\n";
-$dados .= $cep."\n";
-
-$abrir = fopen($arquivo , "w");
-
-fwrite($abrir , $dados);
-
-fclose($abrir);
+banco($server, $user, $password, $db, $consulta);
 
 header("Location: cadastro2.php");
+exit;
 
 ?>

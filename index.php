@@ -1,3 +1,13 @@
+<?php 
+
+session_start();
+if (!isset($_SESSION['logado'])) { header('Location: login.php'); exit; }
+include "app/cons.php";
+require_once "app/DLL.php";
+
+$nomeUsuario = $_SESSION['nome']; 
+
+?>
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -17,15 +27,21 @@
         InCart
     </div>
 
-    <div class="pesquisa">
-        <input type="text" placeholder="Pesquisar produtos...">
-    </div>
+<form action="vitrine.php" method="GET">
+    <input type="text" name="busca" placeholder="Pesquisar produto">
+    <button type="submit">Pesquisar</button>
+</form>
+
+    <span>
+        Olá, <?php echo htmlspecialchars($nomeUsuario); ?>!
+    </span>
 
     <div class="icones">
         <a href="vitrine.php">Produtos</a>
         <a href="favoritos.php">Favoritos</a>
         <a href="carrinho.php">Carrinho</a>
-        <a href="login.php">Login</a>
+        <a href="conta.php">Minha conta</a>
+        <a href="logout.php">Sair</a>
     </div>
 
 </div>
@@ -284,7 +300,7 @@
  </main>
 
     <script>
-
+         
         let botao = document.querySelector('.menu-toggle');
 
         let menu = document.querySelector('.categorias');

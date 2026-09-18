@@ -6,10 +6,59 @@ if (!isset($_SESSION['favoritos'])) {
     $_SESSION['favoritos'] = [];
 }
 
+$cpf = $_SESSION['cpf'];
+
+$consultaFavoritos = "SELECT produto_id
+                       FROM favoritos
+                       WHERE cpf = '$cpf'";
+
+$resultadoFavoritos = banco(
+    $server,
+    $user,
+    $password,
+    $db,
+    $consultaFavoritos
+);
+
+while ($linha = $resultadoFavoritos->fetch_assoc()) {
+
+    $id = $linha['produto_id'];
+
+    if (isset($produtos[$id])) {
+
+        $_SESSION['favoritos'][$id] = [
+            "nome" => $produtos[$id]["nome"],
+            "preco" => $produtos[$id]["preco"]
+        ];
+    }
+}
+
 if (isset($_GET['remover'])) {
+
     $id = (int) $_GET['remover'];
+
     unset($_SESSION['favoritos'][$id]);
+
+    $cpf = $_SESSION['cpf'];
+
+    $conexao = new mysqli($server, $user, $password, $db);
+
+    if ($conexao->connect_error) {
+        die("Erro na conexão com o banco: " . $conexao->connect_error);
+    }
+
+    $sql = "DELETE FROM favoritos
+            WHERE cpf = '$cpf'
+            AND produto_id = $id";
+
+    if (!$conexao->query($sql)) {
+        die("Erro ao remover favorito: " . $conexao->error);
+    }
+
+    $conexao->close();
+
     header("Location: favoritos.php");
+
     exit;
 }
 ?>

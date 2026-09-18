@@ -2,43 +2,72 @@
 
 session_start();
 
-$login = $_POST['login'];
+include "app/cons.php";
+require_once "app/DLL.php";
 
+$login = $_POST['login'];
 $senha = $_POST['senha'];
 
-$arquivo = "login/".$login.".dat";
 
-if(file_exists($arquivo)){
+// Procura o login no banco
+$consulta = "SELECT * FROM logins WHERE login = '$login'";
 
-    $abrir = fopen($arquivo , "r");
+$resultado = banco($server, $user, $password, $db, $consulta);
 
-    $dados = file($arquivo);
+if ($resultado->num_rows > 0) {
 
-    $nome = trim($dados[0]);
+    $dadosLogin = $resultado->fetch_assoc();
 
-    $cpf = trim($dados[1]);
+    $cpf = $dadosLogin['cpf'];
+    $loginSalvo = $dadosLogin['login'];
+    $senhaSalva = $dadosLogin['senha'];
 
-    $loginSalvo = trim($dados[2]);
 
-    $senhaSalva = trim($dados[3]);
+    // Verifica a senha
+    if (password_verify($senha, $senhaSalva)) {
 
-    fclose($abrir);
+        // Procura os dados do usuário pelo CPF
+        $consultaUsuario = "SELECT * FROM usuarios WHERE cpf = '$cpf'";
 
-    if(password_verify($senha , $senhaSalva)){
+        $resultadoUsuario = banco(
+            $server,
+            $user,
+            $password,
+            $db,
+            $consultaUsuario
+        );
 
-        $_SESSION['logado'] = "ok";
+        if ($resultadoUsuario->num_rows > 0) {
 
-        $_SESSION['nome'] = $nome;
+            $dadosUsuario = $resultadoUsuario->fetch_assoc();
 
-        $_SESSION['cpf'] = $cpf;
+            $nome = $dadosUsuario['nome'];
 
-        $_SESSION['login'] = $loginSalvo;
+            $_SESSION['logado'] = "ok";
+            $_SESSION['nome'] = $nome;
+            $_SESSION['cpf'] = $cpf;
+            $_SESSION['login'] = $loginSalvo;
 
-        header("Location: vitrine.php");
+            header("Location: vitrine.php");
+            exit;
 
-    }
+        } else {
 
-    else{
+            echo "
+
+            <script>
+
+                alert('Usuário não encontrado!');
+
+                window.location='login.php';
+
+            </script>
+
+            ";
+
+        }
+
+    } else {
 
         echo "
 
@@ -54,9 +83,7 @@ if(file_exists($arquivo)){
 
     }
 
-}
-
-else{
+} else {
 
     echo "
 

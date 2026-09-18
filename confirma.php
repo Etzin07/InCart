@@ -15,8 +15,38 @@ $itens = $_SESSION['carrinho'];
 
 $total = 0;
 
-foreach ($itens as $item) {
-    $total += $item['preco'] * $item['quantidade'];
+include "app/cons.php";
+require_once "app/DLL.php";
+
+$produtosBanco = [];
+
+$consulta = "SELECT * FROM produtos";
+
+$resultado = banco(
+    $server,
+    $user,
+    $password,
+    $db,
+    $consulta
+);
+
+while ($linha = $resultado->fetch_assoc()) {
+
+    $produtosBanco[$linha['id']] = [
+        "nome" => $linha['nome'],
+        "preco" => $linha['preco']
+    ];
+}
+
+foreach ($itens as $id => $item) {
+
+    if (!isset($produtosBanco[$id])) {
+        continue;
+    }
+
+    $preco = $produtosBanco[$id]['preco'];
+
+    $total += $preco * $item['quantidade'];
 }
 
 if (!isset($_POST['confirmar'])) {
@@ -97,37 +127,75 @@ if (!isset($_POST['confirmar'])) {
 exit;
 }
 
+$cpf = $_SESSION['cpf'];
+
 $entrega = $_POST['entrega'];
 $pagamento = $_POST['pagamento'];
 
-$pedido = [
-    "data" => date("d/m/Y H:i:s"),
-    "itens" => $itens,
-    "total" => $total,
-    "entrega" => $entrega,
-    "pagamento" => $pagamento
-];
 
-$arquivo = "pedidos.dat";
+include "app/cons.php";
+require_once "app/DLL.php";
 
-$pedidos = [];
+$cpf = $_SESSION['cpf'];
 
-if (file_exists($arquivo) && filesize($arquivo) > 0) {
+$dataPedido = date("Y-m-d H:i:s");
 
-    $abrir = fopen($arquivo, "r");
+$sqlPedido = "INSERT INTO pedidos
+    (cpf, data_pedido, total, pagamento, entrega)
+    VALUES
+    ('$cpf', '$dataPedido', $total, '$pagamento', '$entrega')";
 
-    $conteudo = fread($abrir, filesize($arquivo));
+$conexao = new mysqli($server, $user, $password, $db);
 
-    fclose($abrir);
-
-    $pedidos = unserialize($conteudo);
+if ($conexao->connect_error) {
+    die("Erro na conexão com o banco: " . $conexao->connect_error);
 }
 
-$pedidos[] = $pedido;
+if (!$conexao->query($sqlPedido)) {
+    die("Erro ao criar pedido: " . $conexao->error);
+}
 
-file_put_contents($arquivo, serialize($pedidos));
+$pedidoId = $conexao->insert_id;
 
-unset($_SESSION['carrinho'], $_SESSION['favoritos']);
+foreach ($itens as $id => $item) {
+
+    if (!isset($produtosBanco[$id])) {
+        continue;
+    }
+
+    $preco = $produtosBanco[$id]['preco'];
+    $quantidade = $item['quantidade'];
+
+    $sqlItem = "INSERT INTO itens_pedido
+        (pedido_id, produto_id, quantidade, preco)
+        VALUES
+        ($pedidoId, $id, $quantidade, $preco)";
+
+    if (!$conexao->query($sqlItem)) {
+        die("Erro ao salvar item do pedido: " . $conexao->error);
+    }
+}
+
+$conexao->close();
+
+$cpf = $_SESSION['cpf'];
+
+$conexao = new mysqli($server, $user, $password, $db);
+
+if ($conexao->connect_error) {
+    die("Erro na conexão com o banco: " . $conexao->connect_error);
+}
+
+$sqlLimparCarrinho = "DELETE FROM carrinho
+                      WHERE cpf = '$cpf'";
+
+if (!$conexao->query($sqlLimparCarrinho)) {
+    die("Erro ao limpar carrinho: " . $conexao->error);
+}
+
+$conexao->close();
+
+unset($_SESSION['carrinho']);
 ?>
 
 <!DOCTYPE html>
@@ -158,27 +226,47 @@ unset($_SESSION['carrinho'], $_SESSION['favoritos']);
 
         <br>
 
-        <?php foreach ($itens as $item): ?>
+        <a href="pedidos.php" class="btn-pedidos">
+            
+        Meus pedidos
+        
+        </a>
 
-            <div class="carrinho-item">
+        <?php foreach ($itens as $id => $item): ?>
 
-                <h3>
-                    <?php echo $item['nome']; ?>
-                </h3>
+    <?php
 
-                <p>
-                    Quantidade:
-                    <?php echo $item['quantidade']; ?>
-                </p>
+    if (!isset($produtosBanco[$id])) {
+        continue;
+    }
 
-                <p>
-                    Preço:
-                    R$ <?php echo number_format($item['preco'], 2, ',', '.'); ?>
-                </p>
+    $produto = $produtosBanco[$id];
 
-            </div>
+    $nome = $produto['nome'];
+    $preco = $produto['preco'];
+    $quantidade = $item['quantidade'];
 
-        <?php endforeach; ?>
+    ?>
+
+    <div class="carrinho-item">
+
+        <h3>
+            <?php echo htmlspecialchars($nome); ?>
+        </h3>
+
+        <p>
+            Quantidade:
+            <?php echo $quantidade; ?>
+        </p>
+
+        <p>
+            Preço:
+            R$ <?php echo number_format($preco, 2, ',', '.'); ?>
+        </p>
+
+    </div>
+
+<?php endforeach; ?>
 
         <br>
 
