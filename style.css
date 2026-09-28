@@ -570,3 +570,345 @@ textarea {
         width: 100%;
     }
 }
+
+/* =====================================================================
+   ACRÉSCIMOS: classes que as páginas usavam mas não tinham regra no CSS
+   ===================================================================== */
+
+/* título branco em cima do degradê do cabeçalho */
+.header h1 {
+    color: white;
+}
+
+/* ---------- links de login/cadastro ---------- */
+.cadastro-link {
+    display: block;
+    text-align: center;
+    margin-top: 18px;
+    color: #ff527f;
+    font-weight: bold;
+}
+
+.cadastro-link:hover {
+    text-decoration: underline;
+}
+
+.login-container,
+.cadastro-container {
+    padding: 10px;
+}
+
+/* ---------- cards de produto (vitrine, favoritos e index) ---------- */
+.produto-card,
+.card {
+    background: white;
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+    border: 1px solid #f1ded7;
+    text-align: center;
+    transition: 0.3s;
+}
+
+.produto-card:hover,
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+
+.produto-img,
+.card img {
+    display: block;
+    width: 100%;
+    height: 220px;
+    object-fit: contain;
+    margin: 0 auto 15px;
+}
+
+.produto-nome,
+.card h3 {
+    font-size: 19px;
+    font-weight: bold;
+    color: #444;
+    min-height: 45px;
+}
+
+.produto-preco,
+.card p {
+    font-size: 22px;
+    font-weight: bold;
+    color: #ff527f;
+    margin: 12px 0 18px;
+}
+
+.produto-card h3 {
+    color: #444;
+}
+
+.produto-card a {
+    display: inline-block;
+    color: #ff527f;
+    font-weight: bold;
+    margin-top: 6px;
+}
+
+.produto-card a:hover {
+    text-decoration: underline;
+}
+
+.pesquisa {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.pesquisa input {
+    margin-bottom: 0;
+}
+
+.pesquisa button {
+    white-space: nowrap;
+}
+
+/* ---------- topo da página inicial (index.php) ---------- */
+.topo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    background: linear-gradient(135deg, #ff7a59, #ff4f81);
+    color: white;
+    padding: 10px 30px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 26px;
+    font-weight: bold;
+}
+
+.topo form {
+    width: auto;
+    flex: 1;
+    max-width: 420px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.topo form input {
+    margin-bottom: 0;
+}
+
+.topo form button {
+    background: white;
+    color: #ff527f;
+    white-space: nowrap;
+}
+
+.topo form button:hover {
+    background: #ffe3ea;
+}
+
+.icones {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.icones a {
+    color: white;
+    font-weight: bold;
+    padding: 10px 14px;
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+.icones a:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+main.produtos {
+    width: 90%;
+    max-width: 1200px;
+    margin: 30px auto;
+}
+
+/* ---------- carrinho ---------- */
+.carrinho-item {
+    background: white;
+    padding: 18px 22px;
+    margin-bottom: 14px;
+    border-radius: 14px;
+    border: 1px solid #f1ded7;
+    box-shadow: 0 5px 16px rgba(0, 0, 0, 0.07);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.carrinho-item h3 {
+    margin: 0;
+    color: #444;
+}
+
+.carrinho-item p {
+    color: #777;
+    line-height: 1.6;
+}
+
+/* dentro do item, o .nav fica sobre fundo branco: precisa de cor própria */
+.carrinho-item .nav a {
+    color: #ff527f;
+    background: #fff0f3;
+}
+
+.carrinho-item .nav a:hover {
+    background: #ffdde6;
+}
+
+.carrinho-item .nav a.remover {
+    color: #e74c3c;
+    background: #fdecea;
+}
+
+.finalizar {
+    display: inline-block;
+    margin: 20px 14px 0 0;
+    padding: 12px 24px;
+    border-radius: 10px;
+    background: #ff527f;
+    color: white;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.finalizar:hover {
+    background: #e9406c;
+    transform: translateY(-2px);
+}
+
+/* ---------- finalizar compra / pedido confirmado ---------- */
+.confirmacao-box {
+    background: white;
+    max-width: 650px;
+    margin: 40px auto;
+    padding: 35px;
+    text-align: center;
+    border-radius: 20px;
+    border: 1px solid #f0ddd7;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.confirmacao-box h1 {
+    color: #ff527f;
+    margin-bottom: 15px;
+}
+
+.confirmacao-box p {
+    margin: 10px 0;
+    color: #555;
+}
+
+.confirmacao-box button {
+    width: 100%;
+}
+
+.confirmacao-box .carrinho-item {
+    text-align: left;
+    background: #fff7f2;
+    box-shadow: none;
+}
+
+.campo-pagamento {
+    cursor: pointer;
+}
+
+.opcoes-recebimento {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.opcao-recebimento {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 18px;
+    border: 1px solid #e3cfc8;
+    border-radius: 10px;
+    background: white;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.opcao-recebimento:hover {
+    border-color: #ff527f;
+}
+
+.opcao-recebimento input {
+    width: auto;
+    margin: 0;
+}
+
+.btn-voltar {
+    display: inline-block;
+    margin-top: 15px;
+    color: #ff527f;
+    font-weight: bold;
+}
+
+.btn-voltar:hover {
+    text-decoration: underline;
+}
+
+/* ---------- celular ---------- */
+@media (max-width: 768px) {
+    .topo {
+        flex-direction: column;
+        padding: 14px;
+    }
+
+    .topo form {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .icones {
+        justify-content: center;
+    }
+
+    .produto-img,
+    .card img {
+        height: 170px;
+    }
+}
+
+@media (max-width: 480px) {
+    .pesquisa {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .pesquisa button {
+        margin-top: 10px;
+    }
+
+    .carrinho-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .finalizar {
+        display: block;
+        text-align: center;
+        margin-right: 0;
+    }
+}

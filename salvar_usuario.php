@@ -37,6 +37,13 @@ $resultado = executarSeguro(
 
 if (!$resultado['ok']) {
     if ($resultado['duplicado']) {
+    $existe = bancoSeguro($server, $user, $password, $db,
+    "SELECT id FROM logins WHERE cpf = ?", "s", [$cpfLimpo]);
+
+if ($existe->num_rows === 0) {
+    header("Location: cadastro2.php"); // CPF sem login: deixa terminar
+    exit;
+}
         echo "<script>alert('Já existe um cadastro com esse CPF. Faça login normalmente.'); window.location='login.php';</script>";
     } else {
         echo "<script>alert('Erro ao salvar cadastro. Tente novamente.'); window.location='cadastro1.php';</script>";

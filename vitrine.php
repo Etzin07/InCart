@@ -96,6 +96,7 @@ if ($busca !== '') {
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vitrine - In Cart</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -131,6 +132,12 @@ if ($busca !== '') {
         <?php foreach ($produtos as $id => $p): ?>
 
             <div class="produto-card">
+
+                <?php if (!empty($p["imagem"])): ?>
+                    <img class="produto-img"
+                         src="<?php echo htmlspecialchars($p["imagem"]); ?>"
+                         alt="<?php echo htmlspecialchars($p["nome"]); ?>">
+                <?php endif; ?>
 
                 <div class="produto-nome">
                     <?php echo htmlspecialchars($p["nome"]); ?>

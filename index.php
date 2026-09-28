@@ -64,7 +64,7 @@ $nomeUsuario = $_SESSION['nome'];
 
         <div class="card">
 
-            <img src="imgs/12.png" alt="card" style="height: 340px; vertical-align:middle">
+            <img src="imgs/12.png" alt="card">
 
             <h3>Arroz 5kg</h3>
 
@@ -82,7 +82,7 @@ $nomeUsuario = $_SESSION['nome'];
 
         <div class="card">
 
-            <img src="imgs/13.png" alt="card" style="height: 340px; vertical-align:middle">
+            <img src="imgs/13.png" alt="card">
 
             <h3>Feijão Preto 1kg</h3>
 
@@ -100,7 +100,7 @@ $nomeUsuario = $_SESSION['nome'];
 
         <div class="card">
 
-            <img src="imgs/14.png" alt="card" style="height: 340px; vertical-align:middle">
+            <img src="imgs/14.png" alt="card">
 
             <h3>Feijão Carica 1kg</h3>
 
@@ -118,7 +118,7 @@ $nomeUsuario = $_SESSION['nome'];
 
         <div class="card">
 
-            <img src="imgs/8.png" alt="card" style="height: 340px; vertical-align:middle">
+            <img src="imgs/8.png" alt="card">
 
             <h3>Macarrão</h3>
 
@@ -136,7 +136,7 @@ $nomeUsuario = $_SESSION['nome'];
 
         <div class="card">
 
-            <img src="imgs/6.png" alt="card" style="height: 340px; vertical-align:middle">
+            <img src="imgs/6.png" alt="card">
 
             <h3>Óleo de Soja Soya</h3>
 
@@ -154,7 +154,7 @@ $nomeUsuario = $_SESSION['nome'];
 
          <div class="card">
 
-            <img src="imgs/7.png" alt="card" style="height: 340px; vertical-align:middle">
+            <img src="imgs/7.png" alt="card">
 
             <h3>Óleo de Soja Liza</h3>
 
@@ -172,7 +172,7 @@ $nomeUsuario = $_SESSION['nome'];
 
         <div class="card">
 
-            <img src="imgs/1.png" alt="card" style="height: 340px; vertical-align:middle ">
+            <img src="imgs/1.png" alt="card">
 
             <h3>Açucar Mascavo 1kg</h3>
 
@@ -190,7 +190,7 @@ $nomeUsuario = $_SESSION['nome'];
 
           <div class="card">
 
-            <img src="imgs/2.png" alt="card" style="height: 340px; vertical-align:middle ">
+            <img src="imgs/2.png" alt="card">
 
             <h3>Açucar Orgânico 1kg</h3>
 
@@ -208,7 +208,7 @@ $nomeUsuario = $_SESSION['nome'];
 
          <div class="card">
 
-            <img src="imgs/3.png" alt="card" style="height: 340px; vertical-align:middle ">
+            <img src="imgs/3.png" alt="card">
 
             <h3>Açucar refinado 1kg</h3>
 
@@ -226,7 +226,7 @@ $nomeUsuario = $_SESSION['nome'];
 
          <div class="card">
 
-            <img src="imgs/4.png" alt="card" style="height: 340px; vertical-align:middle ">
+            <img src="imgs/4.png" alt="card">
 
             <h3>Açucar Cristal 1kg</h3>
 
@@ -244,7 +244,7 @@ $nomeUsuario = $_SESSION['nome'];
 
          <div class="card">
 
-            <img src="imgs/9.png" alt="card" style="height: 340px; vertical-align:middle ">
+            <img src="imgs/9.png" alt="card">
 
             <h3>Feijão Fradinho pronto</h3>
 
@@ -262,7 +262,7 @@ $nomeUsuario = $_SESSION['nome'];
 
          <div class="card">
 
-            <img src="imgs/11.png" alt="card" style="height: 340px; vertical-align:middle ">
+            <img src="imgs/11.png" alt="card">
 
             <h3>Feijão Preto pronto</h3>
 
@@ -280,7 +280,7 @@ $nomeUsuario = $_SESSION['nome'];
 
         <div class="card">
 
-            <img src="imgs/10.png" alt="card" style="height: 340px; vertical-align:middle ">
+            <img src="imgs/10.png" alt="card">
 
             <h3>Feijão pronto</h3>
 
@@ -305,11 +305,15 @@ $nomeUsuario = $_SESSION['nome'];
 
         let menu = document.querySelector('.categorias');
 
-        botao.addEventListener('click', () => {
+        if (botao && menu) {
 
-            menu.classList.toggle('mostrar');
+            botao.addEventListener('click', () => {
 
-        });
+                menu.classList.toggle('mostrar');
+
+            });
+
+        }
     </script>
 </body>
 

@@ -32,16 +32,27 @@ $resultado = banco(
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meus pedidos</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <h1>Meus pedidos</h1>
+<div class="container">
+
+    <div class="header">
+        <h1>📦 Meus pedidos</h1>
+        <div class="nav">
+            <a href="vitrine.php">Produtos</a>
+            <a href="carrinho.php">Carrinho</a>
+            <a href="logout.php">Sair</a>
+        </div>
+    </div>
 
     <?php while ($pedido = $resultado->fetch_assoc()): ?>
 
-        <div>
+        <div class="pedido">
 
             <h2>
                 Pedido #<?php echo $pedido['id']; ?>
@@ -67,6 +78,7 @@ $resultado = banco(
     <?php echo htmlspecialchars($pedido['entrega']); ?>
 </p>
 
+<div class="itens">
 <h3>Itens do pedido:</h3>
 
 <?php
@@ -91,7 +103,7 @@ $resultadoItens = banco(
 
 <?php while ($item = $resultadoItens->fetch_assoc()): ?>
 
-    <div>
+    <div class="item">
 
         <p>
             Produto:
@@ -112,11 +124,13 @@ $resultadoItens = banco(
 
 <?php endwhile; ?>
 
-<hr>
+</div>
 
         </div>
 
     <?php endwhile; ?>
+
+</div>
 
 </body>
 
