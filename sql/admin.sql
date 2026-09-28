@@ -8,5 +8,5 @@ CREATE TABLE IF NOT EXISTS admins (
 );
 
 -- Não inserimos nenhum admin aqui de propósito: rode admin_criar.php uma
--- vez pelo navegador pra cadastrar o primeiro admin com senha já criptografada
--- (password_hash), em vez de guardar uma senha em texto puro dentro do .sql.
+-- vez pelo navegador pra cadastrar o primeiro admin com senha já criptografada,
+-- em vez de guardar uma senha em texto puro dentro do .sql.
