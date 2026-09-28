@@ -1,320 +1,77 @@
 <?php 
 
 session_start();
-if (!isset($_SESSION['logado'])) { header('Location: login.php'); exit; }
 include "app/cons.php";
 require_once "app/DLL.php";
 
-$nomeUsuario = $_SESSION['nome']; 
 
 ?>
 
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>InCart</title>
-<link rel="stylesheet" href="style.css">
-</head>
+<?php
+require_once "app/layout.php";
+require_once "produtos.php";
 
-<body>
+$logado = isset($_SESSION['logado']) && $_SESSION['logado'] === 'ok';
+$primeiroNome = $logado ? explode(' ', trim($_SESSION['nome']))[0] : '';
+$destaques = array_slice($produtos, 0, 8, true);
 
-<div class="topo">
+ui_head('Início');
+ui_topo('inicio');
+?>
 
-    <div class="logo">
-        <img src="imgs/15.png" alt="logo" style="height: 105px; vertical-align: middle;">
-        InCart
+<section class="hero">
+    <div class="hero-texto">
+        <?php if ($logado): ?>
+            <p class="hero-oi">Olá, <?= ui_h($primeiroNome) ?>!</p>
+        <?php endif; ?>
+        <h1>Seu mercado favorito a um clique de você.</h1>
+        <p class="hero-sub">Arroz, feijão, óleo, açúcar e o básico da despensa. Escolha, pague do seu jeito e receba em casa ou retire.</p>
+        <div class="hero-cta">
+            <a class="btn btn-primario btn-grande" href="<?= $logado ? 'vitrine.php' : 'login.php' ?>">Ver produtos</a>
+            <?php if ($logado): ?>
+                <a class="btn btn-contorno btn-grande" href="carrinho.php">Ir para o carrinho</a>
+            <?php else: ?>
+                <a class="btn btn-contorno btn-grande" href="cadastro1.php">Criar conta</a>
+            <?php endif; ?>
+        </div>
+    </div>
+    <div class="hero-arte" aria-hidden="true">
+        <div class="hero-prod"><?= ui_thumb('Arroz') ?></div>
+        <div class="hero-prod"><?= ui_thumb('Feijão Preto 1kg') ?></div>
+        <div class="hero-prod"><?= ui_thumb('Óleo de Soja Soya') ?></div>
+    </div>
+</section>
+
+<section class="vantagens">
+    <div class="vantagem">
+        <span class="vantagem-ico"><?= ui_icone('entrega') ?></span>
+        <div><h3>Entrega ou retirada</h3><p>Receba no seu endereço ou passe para buscar.</p></div>
+    </div>
+    <div class="vantagem">
+        <span class="vantagem-ico"><?= ui_icone('pix') ?></span>
+        <div><h3>Pague do seu jeito</h3><p>Pix, boleto, cartão de débito ou crédito.</p></div>
+    </div>
+    <div class="vantagem">
+        <span class="vantagem-ico"><?= ui_icone('salvo') ?></span>
+        <div><h3>Carrinho salvo</h3><p>Seus itens e favoritos ficam guardados na sua conta.</p></div>
+    </div>
+</section>
+
+<section>
+    <div class="secao-topo">
+        <h2>Para começar</h2>
+        <a class="link-mais" href="<?= $logado ? 'vitrine.php' : 'login.php' ?>">Ver todos os produtos</a>
     </div>
 
-<form action="vitrine.php" method="GET">
-    <input type="text" name="busca" placeholder="Pesquisar produto">
-    <button type="submit">Pesquisar</button>
-</form>
-
-    <span>
-        Olá, <?php echo htmlspecialchars($nomeUsuario); ?>!
-    </span>
-
-    <div class="icones">
-        <a href="vitrine.php">Produtos</a>
-        <a href="favoritos.php">Favoritos</a>
-        <a href="carrinho.php">Carrinho</a>
-        <a href="conta.php">Minha conta</a>
-        <a href="logout.php">Sair</a>
-    </div>
-
-</div>
-
-<div class="container">
-
-    <div class="header">
-
-        <h1>Seu mercado favorito a um clique de você!</h1>
-
-        <p>
-            Compre produtos direto do conforto  da sua casa!
-        </p>
-
-    </div>
-
-</div>
-
- <main class="produtos">
-
-        <div class="card">
-
-            <img src="imgs/12.png" alt="card">
-
-            <h3>Arroz 5kg</h3>
-
-            <p>R$ 25,90</p>
-
-            <a href="login.php">
-
-                <button>
-                    Comprar
-                </button>
-
-            </a>
-
+    <?php if (empty($destaques)): ?>
+        <div class="vazio"><h2>Ainda não há produtos</h2><p>Volte em breve.</p></div>
+    <?php else: ?>
+        <div class="grade">
+            <?php foreach ($destaques as $id => $p): ?>
+                <?= ui_card($id, $p['nome'], $p['preco'], $logado ? 'loja' : 'anon') ?>
+            <?php endforeach; ?>
         </div>
+    <?php endif; ?>
+</section>
 
-        <div class="card">
-
-            <img src="imgs/13.png" alt="card">
-
-            <h3>Feijão Preto 1kg</h3>
-
-            <p>R$ 8,50</p>
-
-            <a href="login.php">
-
-                <button>
-                    Comprar
-                </button>
-
-            </a>
-
-        </div>
-
-        <div class="card">
-
-            <img src="imgs/14.png" alt="card">
-
-            <h3>Feijão Carica 1kg</h3>
-
-            <p>R$ 8,50</p>
-
-            <a href="login.php">
-
-                <button>
-                    Comprar
-                </button>
-
-            </a>
-
-        </div>
-
-        <div class="card">
-
-            <img src="imgs/8.png" alt="card">
-
-            <h3>Macarrão</h3>
-
-            <p>R$ 4,99</p>
-
-            <a href="login.php">
-
-                <button>
-                    Comprar
-                </button>
-
-            </a>
-
-        </div>
-
-        <div class="card">
-
-            <img src="imgs/6.png" alt="card">
-
-            <h3>Óleo de Soja Soya</h3>
-
-            <p>R$ 6,99</p>
-
-            <a href="login.php">
-
-                <button>
-                    Comprar
-                </button>
-
-            </a>
-
-        </div>
-
-         <div class="card">
-
-            <img src="imgs/7.png" alt="card">
-
-            <h3>Óleo de Soja Liza</h3>
-
-            <p>R$ 5,99</p>
-
-            <a href="login.php">
-
-                <button>
-                    Comprar
-                </button>
-
-            </a>
-
-        </div>
-
-        <div class="card">
-
-            <img src="imgs/1.png" alt="card">
-
-            <h3>Açucar Mascavo 1kg</h3>
-
-            <p>R$ 5,49</p>
-
-            <a href="login.php">
-
-                <button>
-                    Comprar
-                </button>
-
-            </a>
-
-        </div>
-
-          <div class="card">
-
-            <img src="imgs/2.png" alt="card">
-
-            <h3>Açucar Orgânico 1kg</h3>
-
-            <p>R$ 7,49</p>
-
-            <a href="login.php">
-
-                <button>
-                    Comprar
-                </button>
-
-            </a>
-
-        </div>
-
-         <div class="card">
-
-            <img src="imgs/3.png" alt="card">
-
-            <h3>Açucar refinado 1kg</h3>
-
-            <p>R$ 5,99</p>
-
-            <a href="login.php">
-
-                <button>
-                    Comprar
-                </button>
-
-            </a>
-
-        </div>
-
-         <div class="card">
-
-            <img src="imgs/4.png" alt="card">
-
-            <h3>Açucar Cristal 1kg</h3>
-
-            <p>R$ 5,49</p>
-
-            <a href="login.php">
-
-                <button>
-                    Comprar
-                </button>
-
-            </a>
-
-        </div>
-
-         <div class="card">
-
-            <img src="imgs/9.png" alt="card">
-
-            <h3>Feijão Fradinho pronto</h3>
-
-            <p>R$ 6,39</p>
-
-            <a href="login.php">
-
-                <button>
-                    Comprar
-                </button>
-
-            </a>
-
-        </div>
-
-         <div class="card">
-
-            <img src="imgs/11.png" alt="card">
-
-            <h3>Feijão Preto pronto</h3>
-
-            <p>R$ 6,39</p>
-
-            <a href="login.php">
-
-                <button>
-                    Comprar
-                </button>
-
-            </a>
-
-        </div>
-
-        <div class="card">
-
-            <img src="imgs/10.png" alt="card">
-
-            <h3>Feijão pronto</h3>
-
-            <p>R$ 6,39</p>
-
-            <a href="login.php">
-
-                <button>
-                    Comprar
-                </button>
-
-            </a>
-
-        </div>
-
-
- </main>
-
-    <script>
-         
-        let botao = document.querySelector('.menu-toggle');
-
-        let menu = document.querySelector('.categorias');
-
-        if (botao && menu) {
-
-            botao.addEventListener('click', () => {
-
-                menu.classList.toggle('mostrar');
-
-            });
-
-        }
-    </script>
-</body>
-
-</html>
+<?php ui_rodape(); ?>

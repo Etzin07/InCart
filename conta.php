@@ -25,78 +25,36 @@ $usuario = $resultado->fetch_assoc();
 
 ?>
 
-<!DOCTYPE html>
-<html lang="pt-br">
+<?php
+require_once "app/layout.php";
+$inicial = mb_strtoupper(mb_substr(trim($usuario['nome']), 0, 1, 'UTF-8'), 'UTF-8');
+ui_head('Minha conta');
+ui_topo('conta');
+?>
 
-<head>
-
-    <meta charset="UTF-8">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Minha Conta - In Cart</title>
-
-    <link rel="stylesheet" href="style.css">
-
-</head>
-
-<body>
-
-<div class="container">
-
-    <div class="header">
-
-        <h1>🛒 In Cart</h1>
-
-        <div class="nav">
-
-            <a href="vitrine.php">Vitrine</a>
-
-            <a href="carrinho.php">Carrinho</a>
-
-            <a href="favoritos.php">Favoritos</a>
-
-            <a href="logout.php">Sair</a>
-
+<div class="painel painel-estreito">
+    <div class="perfil">
+        <div class="avatar" aria-hidden="true"><?= ui_h($inicial) ?></div>
+        <div>
+            <h1><?= ui_h($usuario['nome']) ?></h1>
+            <p class="sub">Login: <?= ui_h($_SESSION['login'] ?? '') ?></p>
         </div>
-
     </div>
 
+    <dl class="dados">
+        <div><dt>CPF</dt><dd><?= ui_h($usuario['cpf']) ?></dd></div>
+        <div><dt>CEP</dt><dd><?= ui_h($usuario['cep']) ?></dd></div>
+        <div class="largo"><dt>Endereço</dt><dd><?= ui_h($usuario['endereco']) ?></dd></div>
+        <div><dt>Bairro</dt><dd><?= ui_h($usuario['bairro']) ?></dd></div>
+        <div><dt>Cidade / Estado</dt><dd><?= ui_h($usuario['cidade']) ?> / <?= ui_h($usuario['estado']) ?></dd></div>
+    </dl>
 
-    <div class="cadastro-box">
-
-        <h2>Minha Conta</h2>
-
-        <p><strong>Nome:</strong> <?php echo htmlspecialchars($usuario['nome']); ?></p>
-
-        <p><strong>CPF:</strong> <?php echo htmlspecialchars($usuario['cpf']); ?></p>
-
-        <p><strong>Endereço:</strong> <?php echo htmlspecialchars($usuario['endereco']); ?></p>
-
-        <p><strong>Bairro:</strong> <?php echo htmlspecialchars($usuario['bairro']); ?></p>
-
-        <p><strong>Cidade:</strong> <?php echo htmlspecialchars($usuario['cidade']); ?></p>
-
-        <p><strong>Estado:</strong> <?php echo htmlspecialchars($usuario['estado']); ?></p>
-
-        <p><strong>CEP:</strong> <?php echo htmlspecialchars($usuario['cep']); ?></p>
-
-
-        <br>
-
-        <a href="editar_conta.php">
-            <button type="button">Editar informações</button>
-        </a>
-        
-        <br><br>
-
-        <a href="trocar_senha.php">
-          <button type="button">Trocar senha</button>
-        </a>
+    <div class="atalhos">
+        <a class="btn btn-primario" href="pedidos.php">Meus pedidos</a>
+        <a class="btn btn-contorno" href="editar_conta.php">Editar informações</a>
+        <a class="btn btn-contorno" href="trocar_senha.php">Trocar senha</a>
+        <a class="btn btn-perigo" href="logout.php">Sair da conta</a>
     </div>
-
 </div>
 
-</body>
-
-</html>
+<?php ui_rodape(); ?>

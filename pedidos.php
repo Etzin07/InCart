@@ -27,111 +27,63 @@ $resultado = banco(
 
 ?>
 
-<!DOCTYPE html>
-<html lang="pt-br">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meus pedidos</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-
-<body>
-
-<div class="container">
-
-    <div class="header">
-        <h1>📦 Meus pedidos</h1>
-        <div class="nav">
-            <a href="vitrine.php">Produtos</a>
-            <a href="carrinho.php">Carrinho</a>
-            <a href="logout.php">Sair</a>
-        </div>
-    </div>
-
-    <?php while ($pedido = $resultado->fetch_assoc()): ?>
-
-        <div class="pedido">
-
-            <h2>
-                Pedido #<?php echo $pedido['id']; ?>
-            </h2>
-
-            <p>
-                Data:
-                <?php echo $pedido['data_pedido']; ?>
-            </p>
-
-            <p>
-                Total:
-                R$ <?php echo number_format($pedido['total'], 2, ',', '.'); ?>
-            </p>
-
-            <p>
-                Pagamento:
-                <?php echo htmlspecialchars($pedido['pagamento']); ?>
-            </p>
-
-            <p>
-    Entrega:
-    <?php echo htmlspecialchars($pedido['entrega']); ?>
-</p>
-
-<div class="itens">
-<h3>Itens do pedido:</h3>
-
 <?php
-
-$pedidoId = $pedido['id'];
-
-$consultaItens = "SELECT itens_pedido.*, produtos.nome
-                  FROM itens_pedido
-                  INNER JOIN produtos
-                  ON itens_pedido.produto_id = produtos.id
-                  WHERE itens_pedido.pedido_id = $pedidoId";
-
-$resultadoItens = banco(
-    $server,
-    $user,
-    $password,
-    $db,
-    $consultaItens
-);
-
+require_once "app/layout.php";
+ui_head('Meus pedidos');
+ui_topo('conta');
 ?>
 
-<?php while ($item = $resultadoItens->fetch_assoc()): ?>
+<a class="link-voltar" href="conta.php">Voltar para minha conta</a>
 
-    <div class="item">
-
-        <p>
-            Produto:
-            <?php echo htmlspecialchars($item['nome']); ?>
-        </p>
-
-        <p>
-            Quantidade:
-            <?php echo $item['quantidade']; ?>
-        </p>
-
-        <p>
-            Preço:
-            R$ <?php echo number_format($item['preco'], 2, ',', '.'); ?>
-        </p>
-
+<section class="pagina-titulo">
+    <div>
+        <h1>Meus pedidos</h1>
+        <p class="sub">Histórico das suas compras.</p>
     </div>
+</section>
 
+<?php if ($resultado->num_rows === 0): ?>
+    <div class="vazio">
+        <?= ui_icone('pedidos') ?>
+        <h2>Você ainda não fez pedidos</h2>
+        <p>Quando finalizar uma compra, ela aparece aqui.</p>
+        <a class="btn btn-primario" href="vitrine.php">Ver produtos</a>
+    </div>
+<?php endif; ?>
+
+<?php while ($pedido = $resultado->fetch_assoc()): ?>
+    <?php
+    $itensPedido = bancoSeguro(
+        $server, $user, $password, $db,
+        "SELECT ip.quantidade, ip.preco, p.nome
+         FROM itens_pedido ip
+         JOIN produtos p ON p.id = ip.produto_id
+         WHERE ip.pedido_id = ?",
+        "i",
+        [(int) $pedido['id']]
+    );
+    ?>
+    <article class="pedido">
+        <div class="pedido-topo">
+            <div>
+                <h2>Pedido #<?= (int) $pedido['id'] ?></h2>
+                <p class="pedido-data"><?= date('d/m/Y H:i', strtotime($pedido['data_pedido'])) ?></p>
+            </div>
+            <div class="chips">
+                <span class="chip"><?= ui_h($pedido['pagamento']) ?></span>
+                <span class="chip"><?= ui_h(ucfirst($pedido['entrega'])) ?></span>
+            </div>
+            <div class="pedido-total"><?= ui_preco($pedido['total']) ?></div>
+        </div>
+        <div class="pedido-itens">
+            <?php while ($item = $itensPedido->fetch_assoc()): ?>
+                <div class="pedido-item">
+                    <div><?= ui_h($item['nome']) ?> <span>× <?= (int) $item['quantidade'] ?></span></div>
+                    <strong><?= ui_preco($item['preco'] * $item['quantidade']) ?></strong>
+                </div>
+            <?php endwhile; ?>
+        </div>
+    </article>
 <?php endwhile; ?>
 
-</div>
-
-        </div>
-
-    <?php endwhile; ?>
-
-</div>
-
-</body>
-
-</html>
+<?php ui_rodape(); ?>

@@ -2,82 +2,36 @@
 session_start();
 ?>
 
-<!DOCTYPE html>
-<html lang="pt-br">
+<?php
+require_once "app/layout.php";
+ui_head('Criar conta', 'auth-body');
+?>
 
-<head>
+<div class="auth">
+    <aside class="auth-marca">
+        <?= ui_marca(true) ?>
+        <div>
+            <h1>Comece a comprar em poucos minutos.</h1>
+            <p>Criar sua conta leva duas etapas rápidas: seus dados e um login.</p>
+        </div>
+    </aside>
+    <section class="auth-form">
+        <div class="auth-caixa">
+            <h2>Criar conta</h2>
+            <ol class="passos"><li class="ativo">1. Seus dados</li><li class="">2. Login e senha</li></ol>
+            <form class="form form-2" action="salvar_usuario.php" method="post">
+                <label class="campo largo"><span>Nome completo</span><input type="text" name="nome" autocomplete="name" required></label>
+                <label class="campo largo"><span>CPF</span><input type="text" name="cpf" inputmode="numeric" maxlength="14" placeholder="000.000.000-00" required></label>
+                <label class="campo largo"><span>Endereço</span><input type="text" name="endereco" autocomplete="street-address" required></label>
+                <label class="campo"><span>Bairro</span><input type="text" name="bairro" required></label>
+                <label class="campo"><span>Cidade</span><input type="text" name="cidade" autocomplete="address-level2" required></label>
+                <label class="campo"><span>Estado</span><input type="text" name="estado" autocomplete="address-level1" required></label>
+                <label class="campo"><span>CEP</span><input type="text" name="cep" inputmode="numeric" maxlength="9" autocomplete="postal-code" required></label>
+                <button class="btn btn-primario btn-grande btn-bloco largo" type="submit">Continuar</button>
+            </form>
+            <p class="auth-troca">Já tem conta? <a href="login.php">Entrar</a></p>
+        </div>
+    </section>
+</div>
 
-    <meta charset="UTF-8">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Cadastro - In Cart</title>
-
-    <link rel="stylesheet" href="style.css">
-
-</head>
-
-<body>
-
-    <div class="cadastro-container">
-
-        <form action="salvar_usuario.php" 
-              method="POST" 
-              class="cadastro-box">
-
-            <h1>
-                🛒 In Cart
-            </h1>
-
-            <h2>
-                Cadastro de Usuário
-            </h2>
-
-            <input type="text"
-                   name="nome"
-                   placeholder="Nome completo"
-                   required>
-
-            <input type="text"
-                   name="cpf"
-                   placeholder="CPF"
-                   required>
-
-            <input type="text"
-                   name="endereco"
-                   placeholder="Endereço"
-                   required>
-
-            <input type="text"
-                   name="bairro"
-                   placeholder="Bairro"
-                   required>
-
-            <input type="text"
-                   name="cidade"
-                   placeholder="Cidade"
-                   required>
-
-            <input type="text"
-                   name="estado"
-                   placeholder="Estado"
-                   required>
-
-            <input type="text"
-                   name="cep"
-                   placeholder="CEP"
-                   required>
-
-            <button type="submit">
-
-                Continuar
-
-            </button>
-
-        </form>
-
-    </div>
-
-</body>
-
-</html>
+<?php ui_fim(); ?>

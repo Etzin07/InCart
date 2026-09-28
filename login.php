@@ -2,59 +2,31 @@
 session_start();
 ?>
 
-<!DOCTYPE html>
-<html lang="pt-br">
+<?php
+require_once "app/layout.php";
+ui_head('Entrar', 'auth-body');
+?>
 
-<head>
+<div class="auth">
+    <aside class="auth-marca">
+        <?= ui_marca(true) ?>
+        <div>
+            <h1>Seu mercado favorito, a um clique.</h1>
+            <p>Entre para montar seu carrinho, salvar favoritos e acompanhar seus pedidos.</p>
+        </div>
+    </aside>
+    <section class="auth-form">
+        <div class="auth-caixa">
+            <h2>Entrar</h2>
+            <p class="sub">Use o login que você criou no cadastro.</p>
+            <form class="form" action="processa_login.php" method="post">
+                <label class="campo"><span>Login</span><input type="text" name="login" autocomplete="username" required autofocus></label>
+                <label class="campo"><span>Senha</span><input type="password" name="senha" autocomplete="current-password" required></label>
+                <button class="btn btn-primario btn-grande btn-bloco" type="submit">Entrar</button>
+            </form>
+            <p class="auth-troca">Ainda não tem conta? <a href="cadastro1.php">Criar conta</a></p>
+        </div>
+    </section>
+</div>
 
-    <meta charset="UTF-8">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Login - In Cart</title>
-
-    <link rel="stylesheet" href="style.css">
-
-</head>
-
-<body>
-
-    <div class="login-container">
-
-        <form action="processa_login.php" method="POST" class="login-box">
-
-            <h1>
-                🛒 In Cart
-            </h1>
-
-            <h2>
-                Login
-            </h2>
-
-            <input type="text" 
-                   name="login" 
-                   placeholder="Digite seu login"
-                   required>
-
-            <input type="password" 
-                   name="senha" 
-                   placeholder="Digite sua senha"
-                   required>
-
-            <button type="submit">
-                Entrar
-            </button>
-
-            <a href="cadastro1.php" class="cadastro-link">
-
-                Cadastrar novo usuário
-
-            </a>
-
-        </form>
-
-    </div>
-
-</body>
-
-</html>
+<?php ui_fim(); ?>

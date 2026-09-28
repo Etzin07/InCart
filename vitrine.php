@@ -92,74 +92,41 @@ if ($busca !== '') {
 
 ?>
 
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vitrine - In Cart</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+<?php
+require_once "app/layout.php";
+ui_head('Produtos');
+ui_topo('produtos');
+$qtdProdutos = count($produtos);
+?>
 
-<body>
-
-<div class="container">
-
-    <div class="header">
-        <h1>🛒 In Cart</h1>
-
-        <div class="nav">
-            <span>Olá, <?php echo htmlspecialchars($nomeUsuario); ?>!</span>
-            <a href="index.php">Início</a>
-            <a href="carrinho.php">Carrinho</a>
-            <a href="favoritos.php">Favoritos</a>
-            <a href="conta.php">Minha conta</a>
-            <a href="logout.php">Sair</a>
-        </div>
+<section class="pagina-titulo">
+    <div>
+        <h1>Produtos</h1>
+        <p class="sub">
+            <?= $qtdProdutos ?> <?= $qtdProdutos === 1 ? 'item' : 'itens' ?>
+            <?php if ($busca !== ''): ?> para “<?= ui_h($busca) ?>”<?php endif; ?>
+        </p>
     </div>
+</section>
 
-    <form method="GET" class="pesquisa">
-        <input type="text" name="busca" placeholder="Pesquisar produtos..." value="<?php echo htmlspecialchars($busca); ?>">
-        <button type="submit">Buscar</button>
-    </form>
+<form class="busca" method="get" role="search">
+    <?= ui_icone('busca') ?>
+    <input type="search" name="busca" placeholder="Buscar produtos" aria-label="Buscar produtos" value="<?= ui_h($busca) ?>">
+</form>
 
-    <div class="produtos">
-
-        <?php if (empty($produtos)): ?>
-            <p>Nenhum produto encontrado.</p>
-        <?php endif; ?>
-
+<?php if (empty($produtos)): ?>
+    <div class="vazio">
+        <?= ui_icone('busca') ?>
+        <h2>Nenhum produto encontrado</h2>
+        <p>Tente outra palavra ou veja todos os produtos.</p>
+        <a class="btn btn-primario" href="vitrine.php">Ver todos</a>
+    </div>
+<?php else: ?>
+    <div class="grade">
         <?php foreach ($produtos as $id => $p): ?>
-
-            <div class="produto-card">
-
-                <?php if (!empty($p["imagem"])): ?>
-                    <img class="produto-img"
-                         src="<?php echo htmlspecialchars($p["imagem"]); ?>"
-                         alt="<?php echo htmlspecialchars($p["nome"]); ?>">
-                <?php endif; ?>
-
-                <div class="produto-nome">
-                    <?php echo htmlspecialchars($p["nome"]); ?>
-                </div>
-
-                <div class="produto-preco">
-                    R$ <?php echo number_format($p["preco"], 2, ',', '.'); ?>
-                </div>
-
-                <form method="POST"><input type="hidden" name="add" value="<?php echo $id; ?>"><button type="submit">Adicionar ao carrinho</button></form>
-
-                <br><br>
-
-                <form method="POST"><input type="hidden" name="favorito" value="<?php echo $id; ?>"><button type="submit">Favoritar</button></form>
-
-            </div>
-
+            <?= ui_card($id, $p['nome'], $p['preco']) ?>
         <?php endforeach; ?>
-
     </div>
+<?php endif; ?>
 
-</div>
-
-</body>
-</html>
+<?php ui_rodape(); ?>

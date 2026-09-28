@@ -30,71 +30,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['novo_nome'])) {
 $resultadoProdutos = banco($server, $user, $password, $db, "SELECT * FROM produtos ORDER BY id");
 ?>
 
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Admin - In Cart</title>
-    <link rel="stylesheet" href="style.css">
-    <style>
-        table.admin-tabela { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        table.admin-tabela th, table.admin-tabela td { border: 1px solid #ccc; padding: 8px 12px; text-align: left; }
-        .admin-form-novo { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; align-items: center; }
-        .admin-form-novo input { padding: 8px; }
-    </style>
-</head>
-<body>
+<?php
+require_once "app/layout.php";
+ui_head('Produtos · Admin');
+ui_topo_admin();
+?>
 
-<div class="container">
-
-    <div class="header">
-        <h1>🛠️ Painel Admin - Produtos</h1>
-
-        <div class="nav">
-            <span>Olá, <?php echo htmlspecialchars($_SESSION['admin_usuario']); ?>!</span>
-            <a href="vitrine.php">Ver loja</a>
-            <a href="admin_logout.php">Sair</a>
-        </div>
+<section class="pagina-titulo">
+    <div>
+        <h1>Produtos</h1>
+        <p class="sub">Olá, <?= ui_h($_SESSION['admin_usuario']) ?>. Gerencie o catálogo da loja.</p>
     </div>
+</section>
 
-    <?php if ($erro !== ""): ?>
-        <p style="color:red;"><?php echo htmlspecialchars($erro); ?></p>
-    <?php endif; ?>
+<?php if ($erro !== ""): ?>
+    <div class="alerta alerta-erro"><?= ui_h($erro) ?></div>
+<?php endif; ?>
 
-    <h3>Adicionar novo produto</h3>
-
-    <form method="POST" class="admin-form-novo">
-        <input type="text" name="novo_nome" placeholder="Nome do produto" required>
-        <input type="text" name="novo_preco" placeholder="Preço (ex: 9,90)" required>
-        <button type="submit">Adicionar</button>
+<div class="painel">
+    <h2>Novo produto</h2>
+    <form class="form form-linha" method="post">
+        <label class="campo"><span>Nome</span><input type="text" name="novo_nome" placeholder="Ex: Arroz 5kg" required></label>
+        <label class="campo"><span>Preço</span><input type="text" name="novo_preco" inputmode="decimal" placeholder="9,90" required></label>
+        <button class="btn btn-primario" type="submit">Adicionar</button>
     </form>
+</div>
 
-    <table class="admin-tabela">
-        <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Preço</th>
-            <th>Ações</th>
-        </tr>
-
+<div class="tabela-wrap">
+    <table class="tabela">
+        <thead>
+            <tr><th>Produto</th><th>Preço</th><th></th></tr>
+        </thead>
+        <tbody>
         <?php while ($p = $resultadoProdutos->fetch_assoc()): ?>
             <tr>
-                <td><?php echo (int) $p['id']; ?></td>
-                <td><?php echo htmlspecialchars($p['nome']); ?></td>
-                <td>R$ <?php echo number_format((float) $p['preco'], 2, ',', '.'); ?></td>
+                <td><div class="celula-prod"><?= ui_thumb($p['nome']) ?><span><?= ui_h($p['nome']) ?></span></div></td>
+                <td><?= ui_preco($p['preco']) ?></td>
                 <td>
-                    <a href="admin_editar_produto.php?id=<?php echo (int) $p['id']; ?>">Editar</a>
-                    &nbsp;|&nbsp;
-                    <a href="admin_excluir_produto.php?id=<?php echo (int) $p['id']; ?>"
-                       onclick="return confirm('Tem certeza que quer apagar este produto?');"
-                       style="color:red;">Excluir</a>
+                    <div class="acoes">
+                        <a class="btn btn-suave btn-pequeno" href="admin_editar_produto.php?id=<?= (int) $p['id'] ?>">Editar</a>
+                        <a class="btn btn-perigo btn-pequeno" href="admin_excluir_produto.php?id=<?= (int) $p['id'] ?>"
+                           onclick="return confirm('Tem certeza que quer apagar este produto?');">Excluir</a>
+                    </div>
                 </td>
             </tr>
         <?php endwhile; ?>
+        </tbody>
     </table>
-
 </div>
 
-</body>
-</html>
+<?php ui_rodape(); ?>

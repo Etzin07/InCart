@@ -52,77 +52,56 @@ foreach ($itens as $id => $item) {
 if (!isset($_POST['confirmar'])) {
 ?>
 
-<!DOCTYPE html>
-<html lang="pt-br">
+<?php
+require_once "app/layout.php";
+ui_head('Finalizar compra');
+ui_topo('carrinho');
+?>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finalizar Compra</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+<a class="link-voltar" href="carrinho.php">Voltar ao carrinho</a>
 
-<body>
+<section class="pagina-titulo">
+    <div>
+        <h1>Finalizar compra</h1>
+        <p class="sub">Escolha como pagar e como quer receber.</p>
+    </div>
+</section>
 
-<div class="container">
+<form method="post" class="duas-colunas">
+    <div class="painel">
+        <h2 class="bloco-titulo">Como você quer pagar?</h2>
+        <div class="opcoes">
+            <label class="opcao"><input type="radio" name="pagamento" value="Pix" required>Pix</label>
+            <label class="opcao"><input type="radio" name="pagamento" value="Boleto">Boleto</label>
+            <label class="opcao"><input type="radio" name="pagamento" value="Cartao Debito">Cartão de débito</label>
+            <label class="opcao"><input type="radio" name="pagamento" value="Cartao Credito">Cartão de crédito</label>
+            <label class="opcao"><input type="radio" name="pagamento" value="Fisico">Pagamento físico</label>
+        </div>
 
-    <div class="confirmacao-box">
-
-        <h1>Finalizar Compra</h1>
-
-        <p>
-            Total da compra:
-            <strong>
-                R$ <?php echo number_format($total, 2, ',', '.'); ?>
-            </strong>
-        </p>
-
-        <form method="post">
-
-        <h3>Método de Pagamento</h3>
-
-<select name="pagamento" class="campo-pagamento" required>
-    <option value="">Selecione...</option>
-    <option value="Pix">💸 Pix</option>
-    <option value="Boleto">📄 Boleto</option>
-    <option value="Cartao Debito">💳 Cartão de Débito</option>
-    <option value="Cartao Credito">🏦 Cartão de Crédito</option>
-    <option value="Fisico">🏪 Pagamento Físico</option>
-</select>
-            <br><br>
-
-            <h3>Recebimento</h3>
-<div class="opcoes-recebimento">
-
-    <label class="opcao-recebimento">
-        <input type="radio" name="entrega" value="entrega" required>
-        🚚 Entrega
-    </label>
-
-    <label class="opcao-recebimento">
-        <input type="radio" name="entrega" value="retirada">
-        📦 Retirada
-    </label>
-
-</div>
-
-
-            <br><br>
-
-            <button type="submit" name="confirmar">
-                Confirmar Compra
-            </button>
-
-        </form>
-
+        <h2 class="bloco-titulo">Como quer receber?</h2>
+        <div class="opcoes">
+            <label class="opcao"><input type="radio" name="entrega" value="entrega" required><span>Entrega<small>Receba no seu endereço</small></span></label>
+            <label class="opcao"><input type="radio" name="entrega" value="retirada"><span>Retirada<small>Você busca o pedido</small></span></label>
+        </div>
     </div>
 
-</div>
+    <aside class="resumo">
+        <h2>Resumo do pedido</h2>
+        <ul class="resumo-itens">
+            <?php foreach ($itens as $id => $item): ?>
+                <?php if (!isset($produtosBanco[$id])) continue; ?>
+                <li>
+                    <span><?= (int) $item['quantidade'] ?>× <?= ui_h($produtosBanco[$id]['nome']) ?></span>
+                    <strong><?= ui_preco($produtosBanco[$id]['preco'] * $item['quantidade']) ?></strong>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+        <dl><div class="total"><dt>Total</dt><dd><?= ui_preco($total) ?></dd></div></dl>
+        <button class="btn btn-primario btn-bloco btn-grande" type="submit" name="confirmar" value="1">Confirmar compra</button>
+    </aside>
+</form>
 
-</body>
-
-</html>
-
+<?php ui_rodape(); ?>
 <?php
 exit;
 }
@@ -198,103 +177,39 @@ $conexao->close();
 unset($_SESSION['carrinho']);
 ?>
 
-<!DOCTYPE html>
-<html lang="pt-br">
+<?php
+require_once "app/layout.php";
+ui_head('Pedido confirmado');
+ui_topo('carrinho');
+?>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pedido Confirmado</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+<div class="painel painel-estreito">
+    <div class="selo-ok"><?= ui_icone('ok') ?></div>
+    <h1>Pedido confirmado!</h1>
+    <p class="sub">Pedido #<?= (int) $pedidoId ?> registrado com sucesso.</p>
 
-<body>
-
-<div class="container">
-
-    <div class="confirmacao-box">
-
-        <h1>Pedido Confirmado!</h1>
-
-        <p>
-            Seu pedido foi registrado com sucesso.
-        </p>
-
-        <br>
-
-        <h3>Resumo do Pedido</h3>
-
-        <br>
-
-        <a href="pedidos.php" class="btn-pedidos">
-            
-        Meus pedidos
-        
-        </a>
-
+    <ul class="resumo-itens" style="margin-top:22px">
         <?php foreach ($itens as $id => $item): ?>
+            <?php if (!isset($produtosBanco[$id])) continue; ?>
+            <li>
+                <span><?= (int) $item['quantidade'] ?>× <?= ui_h($produtosBanco[$id]['nome']) ?></span>
+                <strong><?= ui_preco($produtosBanco[$id]['preco'] * $item['quantidade']) ?></strong>
+            </li>
+        <?php endforeach; ?>
+    </ul>
 
-    <?php
-
-    if (!isset($produtosBanco[$id])) {
-        continue;
-    }
-
-    $produto = $produtosBanco[$id];
-
-    $nome = $produto['nome'];
-    $preco = $produto['preco'];
-    $quantidade = $item['quantidade'];
-
-    ?>
-
-    <div class="carrinho-item">
-
-        <h3>
-            <?php echo htmlspecialchars($nome); ?>
-        </h3>
-
-        <p>
-            Quantidade:
-            <?php echo $quantidade; ?>
-        </p>
-
-        <p>
-            Preço:
-            R$ <?php echo number_format($preco, 2, ',', '.'); ?>
-        </p>
-
+    <div class="resumo resumo-plano">
+        <dl>
+            <div class="total"><dt>Total</dt><dd><?= ui_preco($total) ?></dd></div>
+            <div><dt>Recebimento</dt><dd><?= ui_h(ucfirst($entrega)) ?></dd></div>
+            <div><dt>Pagamento</dt><dd><?= ui_h($pagamento) ?></dd></div>
+        </dl>
     </div>
 
-<?php endforeach; ?>
-
-        <br>
-
-        <p>
-            <strong>Total:</strong>
-            R$ <?php echo number_format($total, 2, ',', '.'); ?>
-        </p>
-
-        <p>
-            <strong>Recebimento:</strong>
-            <?php echo ucfirst($entrega); ?>
-        </p>
-
-        <p>
-            <strong>Pagamento:</strong>
-            <?php echo $pagamento; ?>
-        </p>
-
-        <br>
-
-        <a class="btn-voltar" href="index.php">
-            Voltar à Loja
-        </a>
-
+    <div class="form-acoes" style="margin-top:22px">
+        <a class="btn btn-primario" href="pedidos.php">Meus pedidos</a>
+        <a class="btn btn-contorno" href="vitrine.php">Continuar comprando</a>
     </div>
-
 </div>
 
-</body>
-
-</html>
+<?php ui_rodape(); ?>

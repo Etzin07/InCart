@@ -1,11 +1,11 @@
 <?php
 // Página de uso único: cria o PRIMEIRO admin do painel. Depois que existir
-// pelo menos um admin cadastrado, ela se bloqueia sozinha (por segurança,
-// já que qualquer pessoa que soubesse a URL poderia criar um admin novo).
+// pelo menos um admin cadastrado, ela se bloqueia sozinha.
 session_start();
 
 include "app/cons.php";
 require_once "app/DLL.php";
+require_once "app/layout.php";
 
 $resultadoContagem = banco($server, $user, $password, $db, "SELECT COUNT(*) AS total FROM admins");
 $totalAdmins = $resultadoContagem->fetch_assoc()['total'];
@@ -13,28 +13,23 @@ $totalAdmins = $resultadoContagem->fetch_assoc()['total'];
 $erro = "";
 
 if ($totalAdmins > 0) {
-    // Já existe pelo menos um admin: bloqueia o acesso a esta página.
-?>
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-<meta charset="UTF-8">
-<title>Configuração já concluída</title>
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
-<div class="login-container">
-    <div class="login-box">
-        <h1>🛒 In Cart</h1>
-        <p>O admin inicial já foi criado. Por segurança, esta página não pode mais ser usada.</p>
-        <p>Se precisar de outro admin, peça pra um admin já existente cadastrar
-        (funcionalidade de cadastrar outros admins pode ser adicionada depois, se quiser).</p>
-        <a href="admin_login.php" class="cadastro-link">Ir para o login do admin</a>
+    ui_head('Configuração concluída', 'auth-body');
+    ?>
+    <div class="auth">
+        <aside class="auth-marca">
+            <?= ui_marca(true) ?>
+            <div><h1>Configuração concluída.</h1></div>
+        </aside>
+        <section class="auth-form">
+            <div class="auth-caixa">
+                <h2>O admin inicial já existe</h2>
+                <p class="sub">Por segurança, esta página não pode mais ser usada.</p>
+                <div class="form-acoes"><a class="btn btn-primario btn-grande" href="admin_login.php">Ir para o login do admin</a></div>
+            </div>
+        </section>
     </div>
-</div>
-</body>
-</html>
-<?php
+    <?php
+    ui_fim();
     exit;
 }
 
@@ -64,35 +59,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
+ui_head('Criar admin', 'auth-body');
 ?>
-
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Criar admin - In Cart</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-<div class="login-container">
-    <form action="admin_criar.php" method="POST" class="login-box">
-
-        <h1>🛒 In Cart</h1>
-        <h2>Criar o primeiro admin</h2>
-
-        <?php if ($erro !== ""): ?>
-            <p style="color:red;"><?php echo htmlspecialchars($erro); ?></p>
-        <?php endif; ?>
-
-        <input type="text" name="usuario" placeholder="Usuário admin" required>
-        <input type="password" name="senha" placeholder="Senha" required>
-
-        <button type="submit">Criar admin</button>
-
-    </form>
+<div class="auth">
+    <aside class="auth-marca">
+        <?= ui_marca(true) ?>
+        <div>
+            <h1>Crie o primeiro admin.</h1>
+            <p>Esta página só funciona uma vez: depois do primeiro cadastro ela se bloqueia.</p>
+        </div>
+    </aside>
+    <section class="auth-form">
+        <div class="auth-caixa">
+            <h2>Criar o primeiro admin</h2>
+            <?php if ($erro !== ""): ?>
+                <div class="alerta alerta-erro" style="margin-top:18px"><?= ui_h($erro) ?></div>
+            <?php endif; ?>
+            <form class="form" action="admin_criar.php" method="post">
+                <label class="campo"><span>Usuário</span><input type="text" name="usuario" autocomplete="username" required></label>
+                <label class="campo"><span>Senha</span><input type="password" name="senha" autocomplete="new-password" required></label>
+                <button class="btn btn-primario btn-grande btn-bloco" type="submit">Criar admin</button>
+            </form>
+        </div>
+    </section>
 </div>
-
-</body>
-</html>
+<?php ui_fim(); ?>

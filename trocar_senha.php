@@ -9,74 +9,26 @@ if (!isset($_SESSION['logado']) || $_SESSION['logado'] != "ok") {
 
 ?>
 
-<!DOCTYPE html>
-<html lang="pt-br">
+<?php
+require_once "app/layout.php";
+ui_head('Trocar senha');
+ui_topo('conta');
+?>
 
-<head>
+<div class="painel painel-estreito">
+    <a class="link-voltar" href="conta.php">Voltar para minha conta</a>
+    <h2>Trocar senha</h2>
+    <p class="sub">Digite a senha atual e escolha uma nova.</p>
 
-    <meta charset="UTF-8">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Trocar Senha - In Cart</title>
-
-    <link rel="stylesheet" href="style.css">
-
-</head>
-
-<body>
-
-<div class="container">
-
-    <div class="header">
-
-        <h1>🛒 In Cart</h1>
-
-        <div class="nav">
-            <a href="vitrine.php">Vitrine</a>
-            <a href="conta.php">Minha conta</a>
-            <a href="logout.php">Sair</a>
+    <form class="form" action="salvar_senha.php" method="post">
+        <label class="campo"><span>Senha atual</span><input type="password" name="senha_atual" autocomplete="current-password" required></label>
+        <label class="campo"><span>Nova senha</span><input type="password" name="nova_senha" autocomplete="new-password" required></label>
+        <label class="campo"><span>Confirme a nova senha</span><input type="password" name="confirma_senha" autocomplete="new-password" required></label>
+        <div class="form-acoes">
+            <button class="btn btn-primario btn-grande" type="submit">Alterar senha</button>
+            <a class="btn btn-contorno btn-grande" href="conta.php">Cancelar</a>
         </div>
-
-    </div>
-
-    <div class="cadastro-box">
-
-        <h2>Trocar senha</h2>
-
-        <form action="salvar_senha.php" method="POST">
-
-            <input type="password"
-                   name="senha_atual"
-                   placeholder="Senha atual"
-                   required>
-
-            <input type="password"
-                   name="nova_senha"
-                   placeholder="Nova senha"
-                   required>
-
-            <input type="password"
-                   name="confirma_senha"
-                   placeholder="Confirme a nova senha"
-                   required>
-
-            <button type="submit">
-                Alterar senha
-            </button>
-
-        </form>
-
-        <br>
-
-        <a href="conta.php">
-            Voltar para minha conta
-        </a>
-
-    </div>
-
+    </form>
 </div>
 
-</body>
-
-</html>
+<?php ui_rodape(); ?>

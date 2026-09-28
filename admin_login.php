@@ -2,29 +2,29 @@
 session_start();
 ?>
 
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Admin - In Cart</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+<?php
+require_once "app/layout.php";
+ui_head('Admin', 'auth-body');
+?>
 
-<div class="login-container">
-    <form action="admin_processa_login.php" method="POST" class="login-box">
-
-        <h1>🛒 In Cart</h1>
-        <h2>Painel Administrativo</h2>
-
-        <input type="text" name="usuario" placeholder="Usuário admin" required>
-        <input type="password" name="senha" placeholder="Senha" required>
-
-        <button type="submit">Entrar</button>
-
-    </form>
+<div class="auth">
+    <aside class="auth-marca">
+        <?= ui_marca(true) ?>
+        <div>
+            <h1>Painel administrativo.</h1>
+            <p>Área restrita para gerenciar os produtos da loja.</p>
+        </div>
+    </aside>
+    <section class="auth-form">
+        <div class="auth-caixa">
+            <h2>Entrar no painel</h2>
+            <form class="form" action="admin_processa_login.php" method="post">
+                <label class="campo"><span>Usuário</span><input type="text" name="usuario" autocomplete="username" required autofocus></label>
+                <label class="campo"><span>Senha</span><input type="password" name="senha" autocomplete="current-password" required></label>
+                <button class="btn btn-primario btn-grande btn-bloco" type="submit">Entrar</button>
+            </form>
+        </div>
+    </section>
 </div>
 
-</body>
-</html>
+<?php ui_fim(); ?>

@@ -47,55 +47,32 @@ while ($linha = $resultadoFavoritos->fetch_assoc()) {
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-<meta charset="UTF-8">
-<title>Favoritos</title>
-<link rel="stylesheet" href="style.css">
-</head>
+<?php
+require_once "app/layout.php";
+ui_head('Favoritos');
+ui_topo('favoritos');
+?>
 
-<body>
-
-<div class="container">
-
-<div class="header">
-<h1>⭐ Favoritos</h1>
-
-<div class="nav">
-<a href="vitrine.php">Vitrine</a>
-<a href="carrinho.php">Carrinho</a>
-<a href="logout.php">Sair</a>
-</div>
-</div>
+<section class="pagina-titulo">
+    <div>
+        <h1>Favoritos</h1>
+        <p class="sub">Os produtos que você salvou.</p>
+    </div>
+</section>
 
 <?php if (empty($itensFavoritos)): ?>
-
-<p>Nenhum produto favoritado.</p>
-
+    <div class="vazio">
+        <?= ui_icone('favoritos') ?>
+        <h2>Nenhum favorito ainda</h2>
+        <p>Toque no coração de um produto para guardá-lo aqui.</p>
+        <a class="btn btn-primario" href="vitrine.php">Ver produtos</a>
+    </div>
 <?php else: ?>
-
-<?php foreach ($itensFavoritos as $id => $item): ?>
-
-<div class="produto-card">
-
-<h3><?php echo htmlspecialchars($item['nome']); ?></h3>
-
-<p>
-Preço: R$ <?php echo number_format($item['preco'], 2, ',', '.'); ?>
-</p>
-
-<a href="favoritos.php?remover=<?php echo $id; ?>">
-Remover
-</a>
-
-</div>
-
-<?php endforeach; ?>
-
+    <div class="grade">
+        <?php foreach ($itensFavoritos as $id => $item): ?>
+            <?= ui_card($id, $item['nome'], $item['preco'], 'fav') ?>
+        <?php endforeach; ?>
+    </div>
 <?php endif; ?>
 
-</div>
-
-</body>
-</html>
+<?php ui_rodape(); ?>

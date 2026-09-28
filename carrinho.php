@@ -90,66 +90,69 @@ while ($linha = $resultadoCarrinho->fetch_assoc()) {
 $total = 0;
 ?>
 
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Carrinho - In Cart</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+<?php
+require_once "app/layout.php";
 
-<body>
+$totalGeral = 0;
+$qtdTotal = 0;
+foreach ($itensCarrinho as $it) {
+    $totalGeral += $it['preco'] * $it['quantidade'];
+    $qtdTotal += $it['quantidade'];
+}
 
-<div class="container">
+ui_head('Carrinho');
+ui_topo('carrinho');
+?>
 
-    <div class="header">
-        <h1>🛒 Seu Carrinho</h1>
-
-        <div class="nav">
-            <a href="vitrine.php">Continuar comprando</a>
-            <a href="index.php">Início</a>
-            <a href="favoritos.php">Favoritos</a>
-            <a href="logout.php">Sair</a>
-        </div>
+<section class="pagina-titulo">
+    <div>
+        <h1>Seu carrinho</h1>
+        <?php if ($qtdTotal > 0): ?>
+            <p class="sub"><?= $qtdTotal ?> <?= $qtdTotal === 1 ? 'item' : 'itens' ?></p>
+        <?php endif; ?>
     </div>
+</section>
 
-    <?php if (empty($itensCarrinho)): ?>
-        <p>Seu carrinho está vazio.</p>
-    <?php else: ?>
+<?php if (empty($itensCarrinho)): ?>
+    <div class="vazio">
+        <?= ui_icone('carrinho') ?>
+        <h2>Seu carrinho está vazio</h2>
+        <p>Adicione produtos para começar sua compra.</p>
+        <a class="btn btn-primario" href="vitrine.php">Ver produtos</a>
+    </div>
+<?php else: ?>
+    <div class="duas-colunas">
+        <section class="lista-itens" aria-label="Itens do carrinho">
+            <?php foreach ($itensCarrinho as $id => $item): ?>
+                <article class="item-linha">
+                    <?= ui_thumb($item['nome']) ?>
+                    <div class="item-info">
+                        <h3><?= ui_h($item['nome']) ?></h3>
+                        <p class="unit"><?= ui_preco($item['preco']) ?> cada</p>
+                        <div class="qtd">
+                            <a href="carrinho.php?menos=<?= (int) $id ?>" aria-label="Diminuir quantidade">−</a>
+                            <span><?= (int) $item['quantidade'] ?></span>
+                            <a href="carrinho.php?mais=<?= (int) $id ?>" aria-label="Aumentar quantidade">+</a>
+                        </div>
+                    </div>
+                    <div class="item-total">
+                        <strong><?= ui_preco($item['preco'] * $item['quantidade']) ?></strong>
+                        <a class="link-perigo" href="carrinho.php?remover=<?= (int) $id ?>">Remover</a>
+                    </div>
+                </article>
+            <?php endforeach; ?>
+        </section>
 
-        <?php foreach ($itensCarrinho as $id => $item): ?>
+        <aside class="resumo">
+            <h2>Resumo</h2>
+            <dl>
+                <div><dt>Itens</dt><dd><?= $qtdTotal ?></dd></div>
+                <div class="total"><dt>Total</dt><dd><?= ui_preco($totalGeral) ?></dd></div>
+            </dl>
+            <a class="btn btn-primario btn-bloco btn-grande" href="confirma.php">Finalizar compra</a>
+            <a class="btn btn-contorno btn-bloco" href="vitrine.php">Continuar comprando</a>
+        </aside>
+    </div>
+<?php endif; ?>
 
-            <?php $subtotal = $item['preco'] * $item['quantidade']; ?>
-            <?php $total += $subtotal; ?>
-
-            <div class="carrinho-item">
-
-                <h3><?php echo htmlspecialchars($item['nome']); ?></h3>
-
-                <p>
-                    Preço: R$ <?php echo number_format($item['preco'], 2, ',', '.'); ?><br>
-                    Quantidade: <?php echo $item['quantidade']; ?><br>
-                    Subtotal: R$ <?php echo number_format($subtotal, 2, ',', '.'); ?>
-                </p>
-
-                <div class="nav">
-                    <a href="carrinho.php?menos=<?php echo $id; ?>">-</a>
-                    <a href="carrinho.php?mais=<?php echo $id; ?>">+</a>
-                    <a class="remover" href="carrinho.php?remover=<?php echo $id; ?>">Remover</a>
-                </div>
-
-            </div>
-
-        <?php endforeach; ?>
-
-        <h2>Total: R$ <?php echo number_format($total, 2, ',', '.'); ?></h2>
-
-        <a class="finalizar" href="confirma.php">Finalizar compra</a>
-        <a href="pedidos.php">Meus pedidos</a>
-
-    <?php endif; ?>
-
-</div>
-
-</body>
-</html>
+<?php ui_rodape(); ?>

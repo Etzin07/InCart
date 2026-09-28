@@ -1,9 +1,8 @@
 <?php
 
-// Antes este arquivo tinha um array fixo de produtos, desatualizado em
-// relação ao banco (que carrinho.php e vitrine.php já consultavam). Agora
-// ele lê direto da tabela `produtos`, então o painel admin (admin.php) e a
-// loja sempre mostram os mesmos dados.
+// Lê os produtos direto da tabela `produtos`, então o painel admin e a loja
+// sempre mostram os mesmos dados. A foto de cada produto vem de
+// imagemDoProduto() (app/layout.php), que escolhe a imagem pelo nome.
 
 if (!isset($server)) {
     include_once __DIR__ . "/app/cons.php";
@@ -11,6 +10,7 @@ if (!isset($server)) {
 if (!function_exists('banco')) {
     require_once __DIR__ . "/app/DLL.php";
 }
+require_once __DIR__ . "/app/layout.php";
 
 $produtos = [];
 
@@ -18,8 +18,9 @@ $resultadoProdutos = banco($server, $user, $password, $db, "SELECT * FROM produt
 
 while ($linha = $resultadoProdutos->fetch_assoc()) {
     $produtos[(int) $linha['id']] = [
-        "nome"  => $linha['nome'],
-        "preco" => (float) $linha['preco'],
+        "nome"   => $linha['nome'],
+        "preco"  => (float) $linha['preco'],
+        "imagem" => imagemDoProduto($linha['nome']),
     ];
 }
 

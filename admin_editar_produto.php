@@ -22,35 +22,25 @@ if ($resultado->num_rows === 0) {
 $produto = $resultado->fetch_assoc();
 ?>
 
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Produto - In Cart</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+<?php
+require_once "app/layout.php";
+ui_head('Editar produto · Admin');
+ui_topo_admin();
+?>
 
-<div class="cadastro-container">
-    <form action="admin_salvar_produto.php" method="POST" class="cadastro-box">
+<div class="painel painel-estreito">
+    <a class="link-voltar" href="admin.php">Voltar aos produtos</a>
+    <h2>Editar produto</h2>
 
-        <h1>🛠️ Editar Produto</h1>
-
-        <input type="hidden" name="id" value="<?php echo (int) $produto['id']; ?>">
-
-        <input type="text" name="nome" value="<?php echo htmlspecialchars($produto['nome']); ?>" required>
-
-        <input type="text" name="preco"
-               value="<?php echo htmlspecialchars(number_format((float) $produto['preco'], 2, ',', '')); ?>"
-               required>
-
-        <button type="submit">Salvar alterações</button>
-
-        <a href="admin.php" class="cadastro-link">Cancelar</a>
-
+    <form class="form" action="admin_salvar_produto.php" method="post">
+        <input type="hidden" name="id" value="<?= (int) $produto['id'] ?>">
+        <label class="campo"><span>Nome</span><input type="text" name="nome" value="<?= ui_h($produto['nome']) ?>" required></label>
+        <label class="campo"><span>Preço</span><input type="text" name="preco" inputmode="decimal" value="<?= ui_h(number_format((float) $produto['preco'], 2, ',', '')) ?>" required></label>
+        <div class="form-acoes">
+            <button class="btn btn-primario btn-grande" type="submit">Salvar alterações</button>
+            <a class="btn btn-contorno btn-grande" href="admin.php">Cancelar</a>
+        </div>
     </form>
 </div>
 
-</body>
-</html>
+<?php ui_rodape(); ?>
