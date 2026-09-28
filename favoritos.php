@@ -2,64 +2,48 @@
 session_start();
 if (!isset($_SESSION['logado'])) { header('Location: login.php'); exit; }
 
-if (!isset($_SESSION['favoritos'])) {
-    $_SESSION['favoritos'] = [];
-}
+// Estes dois includes não existiam nesta página. Sem eles, $server/$user/
+// $password/$db e a função banco() não existiam aqui — a página não tinha
+// como funcionar de verdade.
+include "app/cons.php";
+require_once "app/DLL.php";
 
 $cpf = $_SESSION['cpf'];
 
-$consultaFavoritos = "SELECT produto_id
-                       FROM favoritos
-                       WHERE cpf = '$cpf'";
+if (isset($_GET['remover'])) {
+    $id = (int) $_GET['remover'];
 
-$resultadoFavoritos = banco(
-    $server,
-    $user,
-    $password,
-    $db,
-    $consultaFavoritos
+    executarSeguro(
+        $server, $user, $password, $db,
+        "DELETE FROM favoritos WHERE cpf = ? AND produto_id = ?",
+        "si",
+        [$cpf, $id]
+    );
+
+    header("Location: favoritos.php");
+    exit;
+}
+
+// Busca os favoritos já com nome/preço atual via JOIN — não depende mais
+// de um array $produtos que nunca estava carregado nesta página.
+$itensFavoritos = [];
+
+$resultadoFavoritos = bancoSeguro(
+    $server, $user, $password, $db,
+    "SELECT p.id, p.nome, p.preco
+     FROM favoritos f
+     JOIN produtos p ON p.id = f.produto_id
+     WHERE f.cpf = ?
+     ORDER BY p.id",
+    "s",
+    [$cpf]
 );
 
 while ($linha = $resultadoFavoritos->fetch_assoc()) {
-
-    $id = $linha['produto_id'];
-
-    if (isset($produtos[$id])) {
-
-        $_SESSION['favoritos'][$id] = [
-            "nome" => $produtos[$id]["nome"],
-            "preco" => $produtos[$id]["preco"]
-        ];
-    }
-}
-
-if (isset($_GET['remover'])) {
-
-    $id = (int) $_GET['remover'];
-
-    unset($_SESSION['favoritos'][$id]);
-
-    $cpf = $_SESSION['cpf'];
-
-    $conexao = new mysqli($server, $user, $password, $db);
-
-    if ($conexao->connect_error) {
-        die("Erro na conexão com o banco: " . $conexao->connect_error);
-    }
-
-    $sql = "DELETE FROM favoritos
-            WHERE cpf = '$cpf'
-            AND produto_id = $id";
-
-    if (!$conexao->query($sql)) {
-        die("Erro ao remover favorito: " . $conexao->error);
-    }
-
-    $conexao->close();
-
-    header("Location: favoritos.php");
-
-    exit;
+    $itensFavoritos[(int) $linha['id']] = [
+        "nome" => $linha['nome'],
+        "preco" => (float) $linha['preco'],
+    ];
 }
 ?>
 
@@ -81,23 +65,24 @@ if (isset($_GET['remover'])) {
 <div class="nav">
 <a href="vitrine.php">Vitrine</a>
 <a href="carrinho.php">Carrinho</a>
+<a href="logout.php">Sair</a>
 </div>
 </div>
 
-<?php if(empty($_SESSION['favoritos'])): ?>
+<?php if (empty($itensFavoritos)): ?>
 
 <p>Nenhum produto favoritado.</p>
 
 <?php else: ?>
 
-<?php foreach($_SESSION['favoritos'] as $id => $item): ?>
+<?php foreach ($itensFavoritos as $id => $item): ?>
 
 <div class="produto-card">
 
-<h3><?php echo $item['nome']; ?></h3>
+<h3><?php echo htmlspecialchars($item['nome']); ?></h3>
 
 <p>
-Preço: R$ <?php echo number_format($item['preco'],2,',','.'); ?>
+Preço: R$ <?php echo number_format($item['preco'], 2, ',', '.'); ?>
 </p>
 
 <a href="favoritos.php?remover=<?php echo $id; ?>">
