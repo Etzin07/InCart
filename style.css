@@ -190,9 +190,10 @@ h1, h2, h3 { line-height: 1.15; letter-spacing: -.02em; font-weight: 800; }
 .card-acoes form { display: contents; }
 .card-acoes .btn-bloco { flex: 1; width: auto; }
 
-/* Fotos dos produtos: o arquivo é vertical (1414x2000) com o produto no meio.
-   O quadrado .thumb tem proporção fixa e a imagem preenche ele com "cover",
-   ancorada no centro, com um zoom leve. Ajuste o scale (1.1 a 1.6) se precisar. */
+/* Fotos dos produtos: todos os arquivos são 1414x2000 com o produto no centro
+   (ocupa no máximo ~1000px de largura e ~1100px de altura, sempre em volta do meio).
+   "contain" encaixa a foto inteira no quadrado e o scale dá zoom no miolo,
+   sem cortar nenhum produto. Ajuste o scale (1.4 a 1.8) se quiser mais/menos zoom. */
 .thumb { position: relative; aspect-ratio: 1 / 1; overflow: hidden; background: #fff; }
 .thumb img {
     position: absolute;
@@ -200,9 +201,9 @@ h1, h2, h3 { line-height: 1.15; letter-spacing: -.02em; font-weight: 800; }
     width: 100%;
     height: 100%;
     max-width: none;
-    object-fit: cover;
-    object-position: center 45%;
-    transform: scale(1.35);
+    object-fit: contain;
+    object-position: center center;
+    transform: scale(1.7);
     mix-blend-mode: multiply;
 }
 .thumb-vazio { display: grid; place-items: center; background: var(--brand-tint); color: var(--brand); font-size: 56px; font-weight: 800; }
@@ -364,19 +365,6 @@ body.auth-body { background: #fff; }
     max-width: 1180px; margin: 0 auto; padding: 28px 24px;
     display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap;
     color: var(--muted); font-size: 14px;
-}
-
-/* ---------- banner inicial: o card precisa de proporção definida ---------- */
-.hero-prod { aspect-ratio: 1 / 1; }
-.hero-prod img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    max-width: none;
-    object-fit: cover;
-    object-position: center 45%;
-    transform: scale(1.35);
 }
 
 /* ---------- telas menores ---------- */
