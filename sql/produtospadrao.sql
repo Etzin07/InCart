@@ -1,7 +1,7 @@
 USE incart;
 
 INSERT INTO produtos (nome, preco) VALUES
-('Arroz Branco Tipo 1 5kg',              24.90),
+('Arroz Branco 5kg',                     24.90),
 ('Feijão Preto 1kg',                      8.50),
 ('Feijão Carioca 1kg',                    7.90),
 ('Feijão Fradinho 1kg',                   7.20),
